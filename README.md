@@ -1,4 +1,4 @@
-# Finite 0.0.1
+# Finite
 
 A simple state machine implementation for ruby
 
@@ -18,7 +18,45 @@ Or install it yourself as:
 
 ## Usage
 
-TODO
+	class Elevator
+		include Finite
+		
+		finite do
+			state :idle, start: true do 
+				on event: :prepare_up, change_to: :move_up
+				on event: :prepare_down, change_to: :move_down
+			end
+			state :move_up do 
+				on event: :door_closed, change_to: :elevator_up
+			end
+			state :elevator_up do
+				on event: :started, change_to: :moving
+			end
+			state :move_down do
+				on event: :door_closed, change_to: :elevator_down
+			end
+			state :elevator_down do
+				on event: :started, change_to: :moving
+			end
+			state :moving do 
+				on event: :approaching, change_to: :stopping
+			end
+			state :stopping do
+				on event: :stopped, change_to: :door_opening
+			end
+			state :door_opening do
+				on event: :door_opened, change_to: :at_floor
+			end
+			state :at_floor do
+				on event: :done, change_to: :check_next_dest
+			end
+			state :check_next_dest do
+				on event: :up_request, change_to: :move_up
+				on event: :down_request, change_to: :move_down
+				on event: :no_request, change_to: :idle
+			end
+		end
+	end
 
 ## Contributing
 
