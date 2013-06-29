@@ -1,6 +1,6 @@
-# Statesly
+# Statesly 0.0.1
 
-TODO: Write a gem description
+A simple state machine implementation for ruby
 
 ## Installation
 

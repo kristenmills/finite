@@ -1,4 +1,4 @@
-Copyright (c) 2013 kristenmills
+Copyright (c) 2013 Kristen Mills
 
 MIT License
 
