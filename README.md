@@ -18,6 +18,8 @@ Or install it yourself as:
 
 ## Usage
 
+	require 'finite'
+	
 	class Elevator
 		include Finite
 		
