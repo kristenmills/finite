@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'statesly/version'
+require 'finite/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "statesly"
-  spec.version       = Statesly::VERSION
+  spec.name          = "finite"
+  spec.version       = Finite::VERSION
   spec.authors       = ["Kristen Mills"]
   spec.email         = ["kristen@kristen-mills.com"]
   spec.description   = %q{A simple state machine implementation for ruby}
   spec.summary       = %q{A simple state machine implementation for ruby}
-  spec.homepage      = "http://github.com/kristenmills/statesly"
+  spec.homepage      = "http://github.com/kristenmills/finite"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
