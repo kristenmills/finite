@@ -1,5 +1,6 @@
 # Finite
-	A simple state machine implementation for ruby
+
+A simple state machine implementation for ruby
 
 ## Installation
 
@@ -81,7 +82,7 @@ class Elevator
 			go from: :check_next_dest, to: :idle
 		end
 	end
-	
+
 	def announce_floor
 		puts 'Now arriving on floor #{@floor}'
 	end
