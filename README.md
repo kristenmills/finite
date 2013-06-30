@@ -1,6 +1,5 @@
 # Finite
-
-A simple state machine implementation for ruby
+	A simple state machine implementation for ruby
 
 ## Installation
 
@@ -17,48 +16,77 @@ Or install it yourself as:
     $ gem install finite
 
 ## Usage
+```ruby
+require 'finite'
 
-	require 'finite'
-	
-	class Elevator
-		include Finite
-		
-		finite do
-			state :idle, start: true do 
-				on event: :prepare_up, change_to: :move_up
-				on event: :prepare_down, change_to: :move_down
-			end
-			state :move_up do 
-				on event: :door_closed, change_to: :elevator_up
-			end
-			state :elevator_up do
-				on event: :started, change_to: :moving
-			end
-			state :move_down do
-				on event: :door_closed, change_to: :elevator_down
-			end
-			state :elevator_down do
-				on event: :started, change_to: :moving
-			end
-			state :moving do 
-				on event: :approaching, change_to: :stopping
-			end
-			state :stopping do
-				on event: :stopped, change_to: :door_opening
-			end
-			state :door_opening do
-				on event: :door_opened, change_to: :at_floor
-			end
-			state :at_floor do
-				on event: :done, change_to: :check_next_dest
-			end
-			state :check_next_dest do
-				on event: :up_request, change_to: :move_up
-				on event: :down_request, change_to: :move_down
-				on event: :no_request, change_to: :idle
+class Elevator
+	include Finite
+
+	finite initial: :idle do
+
+		before :doors_closing do
+			puts 'Doors Closing!'
+		end
+
+		before :doors_opening do
+			puts 'Doors Opening!'
+		end
+
+		event :prepare do
+			go from: :idle, to: :door_closing
+		end
+
+		event :go_up do
+			go from: :door_closing, to: :elevator_up
+			after do
+				puts 'Going Up!'
 			end
 		end
+
+		event :go_down do
+			go from: :door_closing, to: :elevator_down
+			after do
+				puts 'Going Down!'
+			end
+		end
+
+		event :started do
+			go from: [:elevator_up, :elevator_down], to: :moving
+		end
+
+		event :approaching do
+			go from: :moving, to: :stopping
+		end
+
+		event :stopped do
+			go from: :stopping, to: :door_opening
+			before do
+				announce_floor
+			end
+		end
+
+		event :door_opened do
+			go from: :door_opening, to: :at_floor
+		end
+
+		event :done do
+			go from: :at_floor, to: :check_next_dest
+		end
+
+		event :request do
+			go from: :check_next_dest, to: :door_closing
+		end
+
+		event :no_request do
+			go from: :check_next_dest, to: :idle
+		end
 	end
+	
+	def announce_floor
+		puts 'Now arriving on floor #{@floor}'
+	end
+end
+```
 
 ## Contributing
 
