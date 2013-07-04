@@ -3,6 +3,8 @@ module Finite
   # The event class. Represents an event in the state machine
   class Event
 
+    attr_reader :name, :transitions, :options
+
     # Create an event object
     #
     # @param name [Symbol] the name of the event
@@ -25,17 +27,20 @@ module Finite
       end
     end
 
-    # The transition method for the dsl
-    #
-    # @param opts [Hash] the options for a transition
-    def go(opts)
-      #Some code
-    end
-
-    [:after, :before].each do |callback|
-      define_method callback do |*args, &block|
-        #some code
+    private
+      # The transition method for the dsl
+      #
+      # @param opts [Hash] the options for a transition
+      def go(opts)
+        @transitions << Transition.new(opts)
       end
-    end
+
+      # Create the callback methods
+      [:after, :before].each do |callback|
+        define_method callback do |*args, &block|
+          options[callback] ||= Array.new
+          options[callback] << block
+        end
+      end
   end
 end
