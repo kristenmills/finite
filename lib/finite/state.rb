@@ -17,12 +17,16 @@ module Finite
     # @return true if they are equal false if not
     def ==(state)
       if state.is_a? Symbol
-        name == state.name
+        @name == state
       elsif state.is_a? State
-        name == state
+        @name == state.name
       else
         false
       end
+    end
+
+    def to_s
+      'State #{name}'
     end
 
 	end
