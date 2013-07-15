@@ -1,6 +1,11 @@
 module Finite
   # The State Machine class. Represents the whole state machine
   class StateMachine
+
+    class << self
+      attr_accessor :machines
+    end
+
     attr_reader :states, :initial, :current_state, :events, :callbacks
 
     # Create a new state machine

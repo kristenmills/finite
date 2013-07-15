@@ -25,9 +25,5 @@ module Finite
       end
     end
 
-    def to_s
-      'State #{name}'
-    end
-
 	end
 end
