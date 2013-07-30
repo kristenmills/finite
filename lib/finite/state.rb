@@ -1,7 +1,7 @@
 module Finite
 
   # The State class. Represents a state in the state machine.
-	class State
+  class State
     attr_reader :name
 
     # Create a new state
@@ -24,6 +24,5 @@ module Finite
         false
       end
     end
-
-	end
+  end
 end
