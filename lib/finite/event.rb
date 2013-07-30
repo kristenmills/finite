@@ -48,21 +48,6 @@ module Finite
       end
     end
 
-    # If in the given state, can this event be performed?
-    #
-    # @param state [State] the state you are currently in
-    # @return whether you can perform this event.
-    def can_do_event?(state)
-      can_do = false
-      transitions.each do |trans|
-        if state == trans.from
-          can_do = true
-          break
-        end
-      end
-      can_do
-    end
-
     # Create the callback methods
     [:after, :before].each do |callback|
       define_method callback do |*args, &block|

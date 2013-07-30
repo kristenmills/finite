@@ -15,14 +15,14 @@ describe Finite::Event do
 
   it 'has a name' do
     event = Finite::Event.new(:event1, &@block)
-    event.name.should be(:event1)
+    expect(event.name).to eq(:event1)
   end
 
   context 'equality' do
     it 'equals symbols that have the same name' do
       event = Finite::Event.new(:event1, &@block)
-      event.should eq(:event1)
-      event.should_not eq(:event2)
+      expect(event).to eq(:event1)
+      expect(event).not_to eq(:event2)
     end
 
     it 'equals events with the same name' do
@@ -30,13 +30,13 @@ describe Finite::Event do
       event2 = Finite::Event.new(:event2, &@block)
       event3 = Finite::Event.new(:event1, &@block)
 
-      event1.should eq(event3)
-      event1.should_not eq(event2)
+      expect(event1).to eq(event3)
+      expect(event1).not_to eq(event2)
     end
 
     it "doesn't equal things that aren't symbols or events" do
       event = Finite::Event.new(:event1, &@block)
-      event.should_not eq('string')
+      expect(event).not_to eq('string')
     end
   end
 
@@ -50,9 +50,9 @@ describe Finite::Event do
   it 'should create callbacks' do
     event = Finite::Event.new(:event1, &@block)
 
-    event.callbacks[:before].should_not be_nil
-    event.callbacks[:after].should_not be_nil
-    event.callbacks[:after][0].call.should eq('hello again')
-    event.callbacks[:before][0].call.should eq('hello for the first time')
+    expect(event.callbacks[:before]).not_to be_nil
+    expect(event.callbacks[:after]).not_to be_nil
+    expect(event.callbacks[:after][0].call).to eq('hello again')
+    expect(event.callbacks[:before][0].call).to eq('hello for the first time')
   end
 end

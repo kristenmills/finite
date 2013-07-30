@@ -86,7 +86,6 @@ class Elevator
         puts "Arriving on floor #{rand(10)}"
     end
 end
-
 ```
 
 ```ruby
@@ -94,10 +93,10 @@ elevator = Elevator.new
 elevator.current_state          # => :idle
 elevator.can_prepare?           # => true
 elevator.can_open_doors?        # => false
+elevator.open_doors             # => RuntimeError 'Invalid Transition'
 elevator.idle?                  # => true
 elevator.prepare
 elevator.current_state          # => :doors_closing
-
 ```
 
 ## Contributing
