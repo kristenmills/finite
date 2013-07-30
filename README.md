@@ -89,6 +89,17 @@ end
 
 ```
 
+```ruby
+elevator = Elevator.new
+elevator.current_state          # => :idle
+elevator.can_prepare?           # => true
+elevator.can_open_doors?        # => false
+elevator.idle?                  # => true
+elevator.prepare
+elevator.current_state          # => :doors_closing
+
+```
+
 ## Contributing
 
 1. Fork it
