@@ -12,5 +12,13 @@ module Finite
       @from = opts[:from]
       @to = opts[:to]
     end
+
+    # Does this transition equal another transition?
+    #
+    # @param other [Transition] another transition
+    # @return true if they are equal false if not
+    def ==(other)
+      from == other.from and to == other.to
+    end
   end
 end

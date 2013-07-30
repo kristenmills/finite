@@ -11,6 +11,8 @@
 # the finite gem.
 module Finite
   attr_accessor :current_state
+
+  # Sets the current state on initialization
   def initialize
     @current_state = StateMachine.machines[self.class].initial
   end
