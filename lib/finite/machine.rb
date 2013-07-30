@@ -6,14 +6,14 @@ module Finite
       attr_accessor :machines
     end
 
-    attr_reader :states, :initial, :current_state, :events, :callbacks
+    attr_reader :states, :initial, :events, :callbacks
 
     # Create a new state machine
     #
     # @param initial [Symbol] the initial state of this state machine
-    def initialize(initial_state, &block)
+    def initialize(initial_state, klass, &block)
+      @class = klass
       @initial = initial_state
-      @current_state = initial_state
       @states = Array.new
       @events = Array.new
       @callbacks = {before: Hash.new , after: Hash.new}
@@ -44,6 +44,7 @@ module Finite
     # @param state [Symbol] the state you are trying to add
     def add_state state
       @states << State.new(state) if not @states.include? state
+      @class.send(:define_method, :"#{state}?"){@current_state == state}
     end
 
     private

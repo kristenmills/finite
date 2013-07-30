@@ -7,7 +7,7 @@ module Finite
     # @param block [Block] the block of code that creates the state machine
     def finite(opts, &block)
       StateMachine.machines ||= Hash.new
-      StateMachine.machines[self] = StateMachine.new(opts[:initial], &block)
+      StateMachine.machines[self] = StateMachine.new(opts[:initial], self, &block)
     end
   end
 end
