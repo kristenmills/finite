@@ -1,4 +1,5 @@
-# Finite
+# Finite [![Build Status](https://travis-ci.org/kristenmills/finite.png)](https://travis-ci.org/kristenmills/finite)
+
 
 A simple state machine implementation for ruby
 
