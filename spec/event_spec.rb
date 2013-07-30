@@ -43,8 +43,8 @@ describe Finite::Event do
   it 'should create transitions' do
     event = Finite::Event.new(:event1, &@block)
     event.transitions.count.should be(1)
-    event.transitions[0].to.should eq(:state2)
-    event.transitions[0].from.should eq(:state1)
+    event.transitions[:state1].to.should eq(:state2)
+    event.transitions[:state1].from.should eq(:state1)
   end
 
   it 'should create callbacks' do

@@ -10,11 +10,14 @@
 # The Finite module. The module that contains all the classes and methods for
 # the finite gem.
 module Finite
-  attr_accessor :current_state
 
   # Sets the current state on initialization
   def initialize
-    @current_state = StateMachine.machines[self.class].initial
+    @current_state = State.new(StateMachine.machines[self.class].initial)
+  end
+
+  def current_state
+    @current_state.name
   end
 
   # Override included method

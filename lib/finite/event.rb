@@ -11,7 +11,7 @@ module Finite
     # @param block [Block] the block of code in the event
     def initialize(name, &block)
       @name = name
-      @transitions = []
+      @transitions = Hash.new
       @callbacks = {before: Array.new, after: Array.new}
       instance_eval &block
     end
@@ -44,8 +44,23 @@ module Finite
         options << opts
       end
       options.each do |opt|
-        @transitions << Transition.new(opt)
+        @transitions[opt[:from]] = Transition.new(opt)
       end
+    end
+
+    # If in the given state, can this event be performed?
+    #
+    # @param state [State] the state you are currently in
+    # @return whether you can perform this event.
+    def can_do_event?(state)
+      can_do = false
+      transitions.each do |trans|
+        if state == trans.from
+          can_do = true
+          break
+        end
+      end
+      can_do
     end
 
     # Create the callback methods

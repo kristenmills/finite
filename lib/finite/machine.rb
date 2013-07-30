@@ -32,9 +32,56 @@ module Finite
         event = Event.new(event_name, &block)
         @events << event
       end
-      event.transitions.each do |transition|
+      event.transitions.each_value do |transition|
         add_state transition.to
         add_state transition.from
+      end
+
+      @class.send(:define_method, :"can_#{event_name}?") do
+        event.transitions.key? @current_state.name
+      end
+
+      @class.send(:define_method, :"#{event_name}") do
+        if event.transitions.key? @current_state.name
+          machine = StateMachine.machines[self.class]
+          states = machine.states
+          callbacks = machine.callbacks
+
+          event.callbacks[:before].each do |callback|
+            self.instance_eval &callback
+          end
+
+          if callbacks[:before].key? :all
+            callbacks[:before][:all].each do |callback|
+              self.instance_eval &callback
+            end
+          end
+          if callbacks[:before].key? @current_state.name
+            callbacks[:before][@current_state.name].each do |callback|
+              self.instance_eval &callback
+            end
+          end
+
+          new_state = states[states.find_index(event.transitions[@current_state.name].to)]
+          @current_state = new_state
+
+          if callbacks[:after].key? :all
+            callbacks[:after][:all].each do |callback|
+              self.instance_eval &callback
+            end
+          end
+          if callbacks[:after].key? @current_state.name
+            callbacks[:after][@current_state.name].each do |callback|
+              self.instance_eval &callback
+            end
+          end
+
+          event.callbacks[:after].each do |callback|
+            self.instance_eval &callback
+          end
+        else
+          raise 'Invalid Transition'
+        end
       end
     end
 
@@ -43,8 +90,10 @@ module Finite
     #
     # @param state [Symbol] the state you are trying to add
     def add_state state
-      @states << State.new(state) if not @states.include? state
-      @class.send(:define_method, :"#{state}?"){@current_state == state}
+      if not @states.include? state
+        @states << State.new(state)
+        @class.send(:define_method, :"#{state}?"){@current_state == state}
+      end
     end
 
     private
