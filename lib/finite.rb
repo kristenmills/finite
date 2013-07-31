@@ -6,7 +6,7 @@
   'machine',
   'class_methods',
   'finite'
-].each { |file| require File.join(__dir__, 'finite', file) }
+].each { |file| require File.join(File.dirname(__FILE__), 'finite', file) }
 
 # The Finite module. The module that contains all the classes and methods for
 # the finite gem.
