@@ -25,6 +25,10 @@ class Elevator
 
     finite initial: :idle do
 
+        before do
+            "This is called before every state but has no purpose other than to show it's existence in this example."
+        end
+
         before :doors_closing do
             puts 'Doors Closing!'
         end
@@ -96,8 +100,9 @@ elevator.can_prepare?           # => true
 elevator.can_open_doors?        # => false
 elevator.open_doors             # => RuntimeError 'Invalid Transition'
 elevator.idle?                  # => true
-elevator.prepare
+elevator.prepare                # => 'Doors Closing!'
 elevator.current_state          # => :doors_closing
+elevator.possible_events        # => [:go_up, :go_down]
 ```
 
 ## Contributing

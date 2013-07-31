@@ -25,11 +25,12 @@ module Finite
       end
     end
 
+    # overrriden for puts and print
     def to_s
       @name.to_s
     end
 
-    # Overridden for p 
+    # Overridden for p
     def inspect
       @name
     end
