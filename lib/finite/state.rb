@@ -24,5 +24,14 @@ module Finite
         false
       end
     end
+
+    def to_s
+      @name.to_s
+    end
+
+    # Overridden for p 
+    def inspect
+      @name
+    end
   end
 end

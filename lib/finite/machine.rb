@@ -14,8 +14,8 @@ module Finite
     def initialize(initial_state, klass, &block)
       @class = klass
       @initial = initial_state
-      @states = Array.new
-      @events = Array.new
+      @states = Hash.new
+      @events = Hash.new
       @callbacks = {before: Hash.new , after: Hash.new}
       instance_eval &block
     end
@@ -30,7 +30,7 @@ module Finite
         raise 'Event #{event_name} already exists. Rename or combine the events'
       else
         event = Event.new(event_name, &block)
-        @events << event
+        @events[event_name] = event
       end
       event.transitions.each_value do |transition|
         add_state transition.to
@@ -38,14 +38,11 @@ module Finite
       end
 
       @class.send(:define_method, :"can_#{event_name}?") do
-        event.transitions.key? @current_state.name
+        event.transitions.key? current_state.name
       end
 
       @class.send(:define_method, :"#{event_name}") do
-        if event.transitions.key? @current_state.name
-          machine = StateMachine.machines[self.class]
-          states = machine.states
-          callbacks = machine.callbacks
+        if event.transitions.key? current_state.name
 
           event.callbacks[:before].each do |callback|
             self.instance_eval &callback
@@ -56,13 +53,13 @@ module Finite
               self.instance_eval &callback
             end
           end
-          if callbacks[:before].key? @current_state.name
-            callbacks[:before][@current_state.name].each do |callback|
+          if callbacks[:before].key? current_state.name
+            callbacks[:before][current_state.name].each do |callback|
               self.instance_eval &callback
             end
           end
 
-          new_state = states[states.find_index(event.transitions[@current_state.name].to)]
+          new_state = states[event.transitions[current_state.name].to]
           @current_state = new_state
 
           if callbacks[:after].key? :all
@@ -70,8 +67,8 @@ module Finite
               self.instance_eval &callback
             end
           end
-          if callbacks[:after].key? @current_state.name
-            callbacks[:after][@current_state.name].each do |callback|
+          if callbacks[:after].key? current_state.name
+            callbacks[:after][current_state.name].each do |callback|
               self.instance_eval &callback
             end
           end
@@ -91,8 +88,8 @@ module Finite
     # @param state [Symbol] the state you are trying to add
     def add_state state
       if not @states.include? state
-        @states << State.new(state)
-        @class.send(:define_method, :"#{state}?"){@current_state == state}
+        @states[state] = State.new(state)
+        @class.send(:define_method, :"#{state}?"){current_state == state}
       end
     end
 
