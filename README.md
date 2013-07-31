@@ -26,7 +26,7 @@ class Elevator
     finite initial: :idle do
 
         before do
-            "This is called before every state but has no purpose other than to show it's existence in this example."
+            "This is called before every state but has no purpose other than to show its existence in this example."
         end
 
         before :doors_closing do
