@@ -1,3 +1,4 @@
 module Finite
-  VERSION = "0.0.1"
+  # The version number
+  VERSION = "1.0.0"
 end

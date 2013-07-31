@@ -1,4 +1,5 @@
-# Finite 0.0.1
+# Finite [![Build Status](https://travis-ci.org/kristenmills/finite.png)](https://travis-ci.org/kristenmills/finite)
+
 
 A simple state machine implementation for ruby
 
@@ -17,8 +18,92 @@ Or install it yourself as:
     $ gem install finite
 
 ## Usage
+```ruby
 
-TODO
+class Elevator
+    include Finite
+
+    finite initial: :idle do
+
+        before do
+            "This is called before every state but has no purpose other than to show it's existence in this example."
+        end
+
+        before :doors_closing do
+            puts 'Doors Closing!'
+        end
+
+        before :doors_opening do
+            puts 'Doors Opening!'
+        end
+
+        event :prepare do
+            go from: :idle, to: :doors_closing
+        end
+
+        event :go_up do
+            go from: :doors_closing, to: :elevator_going_up
+            after do
+                puts 'Going Up!'
+            end
+        end
+
+        event :go_down do
+            go from: :doors_closing, to: :elevator_going_down
+            after do
+                puts 'Going Down!'
+            end
+        end
+
+        event :start do
+            go from: [:elevator_going_up, :elevator_going_down], to: :moving
+        end
+
+        event :approach do
+            go from: :moving, to: :stopping
+        end
+
+        event :stop do
+            go from: :stopping, to: :doors_opening
+            before do
+                announce_floor
+            end
+        end
+
+        event :open_doors do
+            go from: :doors_opening, to: :at_floor
+        end
+
+        event :finish do
+            go from: :at_floor, to: :checking_next_dest
+        end
+
+        event :make_request do
+            go from: :checking_next_dest, to: :doors_closing
+        end
+
+        event :make_no_request do
+            go from: :checking_next_dest, to: :idle
+        end
+    end
+
+    def announce_floor
+        puts "Arriving on floor #{rand(10)}"
+    end
+end
+```
+
+```ruby
+elevator = Elevator.new
+elevator.current_state          # => :idle
+elevator.can_prepare?           # => true
+elevator.can_open_doors?        # => false
+elevator.open_doors             # => RuntimeError 'Invalid Transition'
+elevator.idle?                  # => true
+elevator.prepare                # => 'Doors Closing!'
+elevator.current_state          # => :doors_closing
+elevator.possible_events        # => [:go_up, :go_down]
+```
 
 ## Contributing
 
