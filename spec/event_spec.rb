@@ -55,4 +55,10 @@ describe Finite::Event do
     expect(event.callbacks[:after][0].call).to eq('hello again')
     expect(event.callbacks[:before][0].call).to eq('hello for the first time')
   end
+
+  it 'has to_s and inspect methods' do
+    event = Finite::Event.new(:event, &@block)
+    expect(event.to_s).to eq('event')
+    expect(event.inspect).to eq(:event)
+  end
 end

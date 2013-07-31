@@ -28,4 +28,9 @@ describe Finite::State do
       expect(state).not_to eq('string')
     end
   end
+  it 'has to_s and inspect methods' do
+    state = Finite::State.new(@name)
+    expect(state.to_s).to eq('state_name')
+    expect(state.inspect).to eq(:state_name)
+  end
 end

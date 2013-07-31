@@ -15,6 +15,10 @@ describe Finite::StateMachine do
       expect{@machine.add_event(:prepare){}}.to raise_error
     end
 
+    it 'cannot be stupid with your event naming' do
+      expect{@machine.add_event(:to_s)}.to raise_error
+    end
+
     it 'increases in size when an event is added' do
       @machine.add_event(:random_event){}
       expect(@machine.events.count).to be(11)
@@ -28,6 +32,10 @@ describe Finite::StateMachine do
   context 'adding states' do
     it 'has states' do
       expect(@machine.states.count).to be(9)
+    end
+
+    it 'cannot be stupid with your state naming' do
+      expect{@machine.add_state(:const_defined){}}.to raise_error
     end
 
     it 'cannot have states with the same name' do

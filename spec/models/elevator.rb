@@ -2,6 +2,11 @@
 class Elevator
   include Finite
 
+  def initialize
+    @before_called = 0
+    @after_called = 0
+  end
+
   finite initial: :idle do
 
     before :doors_closing do
@@ -11,6 +16,19 @@ class Elevator
     before :doors_opening do
       puts 'Doors Opening!'
     end
+
+    after :doors_closing do
+      puts "I'm no longer idle"
+    end
+
+    before do
+      @before_called += 1
+    end
+
+    after do
+      @after_called += 1
+    end
+
 
     event :prepare do
       go from: :idle, to: :doors_closing
