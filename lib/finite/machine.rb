@@ -51,7 +51,7 @@ module Finite
         if event.transitions.key? current_state.name
 
           # Makes sure the transition can happen
-          transiton = event.transitions[current_state.name].to
+          transition = event.transitions[current_state.name]
           unless transition.condition.nil? or self.instance_exec(&transition.condition)
             raise Error.new('Does not meet the transition condition')
           end

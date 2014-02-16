@@ -1,10 +1,11 @@
 
 class Elevator
   include Finite
-
+  attr_accessor :broken
   def initialize
     @before_called = 0
     @after_called = 0
+    @broken = false
   end
 
   finite initial: :idle do
@@ -31,7 +32,7 @@ class Elevator
 
 
     event :prepare do
-      go from: :idle, to: :doors_closing
+      go from: :idle, to: :doors_closing, if: lambda { not @broken }
     end
 
     event :go_up do

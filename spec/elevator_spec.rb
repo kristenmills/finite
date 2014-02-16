@@ -54,6 +54,13 @@ describe Elevator do
       @elevator.approach
       @elevator.stop
     end
+
+    it 'will respond to conditions' do
+      @elevator.broken = true
+      expect{@elevator.prepare}.to raise_error(Finite::Error)
+      @elevator.broken = false
+      expect{@elevator.prepare}.to_not raise_error
+    end
   end
 
 end
