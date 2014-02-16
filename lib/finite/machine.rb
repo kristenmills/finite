@@ -34,46 +34,62 @@ module Finite
       raise 'Event #{event_name} already exists. Rename or combine the events' if events.include? event_name
       event = Event.new(event_name, &block)
       @events[event_name] = event
+
+      # Add the states from the transition
       event.transitions.each_value do |transition|
         add_state transition.to
         add_state transition.from
       end
+
+      # Creates the method can_event_name?
       @class.send(:define_method, :"can_#{event_name}?") do
         event.transitions.key? current_state.name
       end
+
+      # Creates the method
       @class.send(:define_method, :"#{event_name}") do
         if event.transitions.key? current_state.name
 
+          # Makes sure the transition can happen
+          new_state = states[event.transitions[current_state.name].to]
+
+          # Call all of the "before event" callbacks
           event.callbacks[:before].each do |callback|
             self.instance_eval &callback
           end
 
+          # Call all of the before_all callbacks
           if callbacks[:before].key? :all
             callbacks[:before][:all].each do |callback|
               self.instance_eval &callback
             end
           end
 
-          new_state = states[event.transitions[current_state.name].to]
-
+          # Call the "before state" callbacks
           if callbacks[:before].key? new_state.name
             callbacks[:before][new_state.name].each do |callback|
               self.instance_eval &callback
             end
           end
+
+          # Set the current state
           @current_state = new_state
 
-          if callbacks[:after].key? :all
-            callbacks[:after][:all].each do |callback|
-              self.instance_eval &callback
-            end
-          end
+          # call the "after state" callbacks
           if callbacks[:after].key? current_state.name
             callbacks[:after][current_state.name].each do |callback|
               self.instance_eval &callback
             end
           end
 
+          # call the "after all" callbacks
+          if callbacks[:after].key? :all
+            callbacks[:after][:all].each do |callback|
+              self.instance_eval &callback
+            end
+          end
+
+          # Call the "after event" callbacks
           event.callbacks[:after].each do |callback|
             self.instance_eval &callback
           end
