@@ -51,6 +51,10 @@ module Finite
         if event.transitions.key? current_state.name
 
           # Makes sure the transition can happen
+          transiton = event.transitions[current_state.name].to
+          unless transition.condition.nil? or self.instance_exec(&transition.condition)
+            raise Error.new('Does not meet the transition condition')
+          end
           new_state = states[event.transitions[current_state.name].to]
 
           # Call all of the "before event" callbacks
@@ -94,7 +98,7 @@ module Finite
             self.instance_eval &callback
           end
         else
-          raise 'Invalid Transition'
+          raise Error.new 'Invalid Transition'
         end
       end
     end
