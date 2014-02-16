@@ -1,5 +1,6 @@
 [
   'version',
+  'error',
   'transition',
   'event',
   'state',
