@@ -30,7 +30,7 @@ module Finite
       end
     end
 
-    # overrriden for puts and print
+    # Overridden for puts and print
     def to_s
       @name.to_s
     end
@@ -40,29 +40,29 @@ module Finite
       @name
     end
 
-    private
-    # The transition method for the dsl
-    #
-    # @param opts [Hash] the options for a transition
-    def go(opts)
-      options = []
-      if opts[:from].is_a? Array
-        opts[:from].each do |from|
-          options << {from: from, to: opts[:to]}
+  private
+      # The transition method for the dsl
+      #
+      # @param opts [Hash] the options for a transition
+      def go(opts)
+        options = []
+        if opts[:from].is_a? Array
+          opts[:from].each do |from|
+            options << {from: from, to: opts[:to]}
+          end
+        else
+          options << opts
         end
-      else
-        options << opts
+        options.each do |opt|
+          @transitions[opt[:from]] = Transition.new(opt)
+        end
       end
-      options.each do |opt|
-        @transitions[opt[:from]] = Transition.new(opt)
-      end
-    end
 
-    # Create the callback methods
-    [:after, :before].each do |callback|
-      define_method callback do |*args, &block|
-        @callbacks[callback] << block
+      # Create the callback methods
+      [:after, :before].each do |callback|
+        define_method callback do |*args, &block|
+          @callbacks[callback] << block
+        end
       end
-    end
   end
 end

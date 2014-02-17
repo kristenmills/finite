@@ -97,6 +97,7 @@ module Finite
           event.callbacks[:after].each do |callback|
             self.instance_eval &callback
           end
+          self
         else
           raise Error.new 'Invalid Transition'
         end
