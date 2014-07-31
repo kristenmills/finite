@@ -6,7 +6,7 @@ describe Finite::State do
   end
 
   it 'has a name' do
-    Finite::State.new(@name).name.should eq(:state_name)
+    expect(Finite::State.new(@name).name).to eq(:state_name)
   end
   context 'equality' do
     it 'equals a symbol of the same name' do
