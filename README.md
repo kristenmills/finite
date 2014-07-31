@@ -19,9 +19,14 @@ Or install it yourself as:
 
 ## Usage
 ```ruby
+require 'finite'
 
 class Elevator
     include Finite
+
+    def initialize
+        @broken = false
+    end
 
     finite initial: :idle do
 
@@ -38,7 +43,7 @@ class Elevator
         end
 
         event :prepare do
-            go from: :idle, to: :doors_closing
+            go from: :idle, to: :doors_closing, if: -> { not @broken }
         end
 
         event :go_up do
@@ -98,7 +103,7 @@ elevator = Elevator.new
 elevator.current_state          # => :idle
 elevator.can_prepare?           # => true
 elevator.can_open_doors?        # => false
-elevator.open_doors             # => RuntimeError 'Invalid Transition'
+elevator.open_doors             # => Finite::Error 'Invalid Transition'
 elevator.idle?                  # => true
 elevator.prepare                # => 'Doors Closing!'
 elevator.current_state          # => :doors_closing
@@ -114,7 +119,7 @@ elevator.possible_events        # => [:go_up, :go_down]
 5. Create new Pull Request
 
 ## License
-Copyright (c) 2013 Kristen Mills
+Copyright (c) 2014 Kristen Mills
 
 MIT License
 
