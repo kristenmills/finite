@@ -32,7 +32,7 @@ class Elevator
 
 
     event :prepare do
-      go from: :idle, to: :doors_closing, if: lambda { not @broken }
+      go from: :idle, to: :doors_closing, if: -> { not @broken }
     end
 
     event :go_up do

@@ -10,8 +10,8 @@ RSpec.configure do |config|
   original_stdout = $stdout
   config.before(:all) do
     # Redirect stderr and stdout
-    $stderr = File.new(File.join(File.dirname(__FILE__), 'null.txt'), 'w')
-    $stdout = File.new(File.join(File.dirname(__FILE__), 'null.txt'), 'w')
+    $stderr = StringIO.new
+    $stdout = StringIO.new
   end
   config.after(:all) do
     $stderr = original_stderr

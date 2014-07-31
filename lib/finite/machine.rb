@@ -46,60 +46,58 @@ module Finite
         event.transitions.key? current_state.name
       end
 
-      # Creates the method
+      # Creates the method event_name
       @class.send(:define_method, :"#{event_name}") do
         if event.transitions.key? current_state.name
 
           # Makes sure the transition can happen
           transition = event.transitions[current_state.name]
-          unless transition.condition.nil? or self.instance_exec(&transition.condition)
-            raise Error.new('Does not meet the transition condition')
-          end
-          new_state = states[event.transitions[current_state.name].to]
+          if transition.condition.nil? or self.instance_exec(&transition.condition)
 
-          # Call all of the "before event" callbacks
-          event.callbacks[:before].each do |callback|
-            self.instance_eval &callback
-          end
+            new_state = states[event.transitions[current_state.name].to]
 
-          # Call all of the before_all callbacks
-          if callbacks[:before].key? :all
-            callbacks[:before][:all].each do |callback|
+            # Call all of the "before event" callbacks
+            event.callbacks[:before].each do |callback|
               self.instance_eval &callback
             end
-          end
 
-          # Call the "before state" callbacks
-          if callbacks[:before].key? new_state.name
-            callbacks[:before][new_state.name].each do |callback|
+            # Call all of the before_all callbacks
+            if callbacks[:before].key? :all
+              callbacks[:before][:all].each do |callback|
+                self.instance_eval &callback
+              end
+            end
+
+            # Call the "before state" callbacks
+            if callbacks[:before].key? new_state.name
+              callbacks[:before][new_state.name].each do |callback|
+                self.instance_eval &callback
+              end
+            end
+
+            # Set the current state
+            @current_state = new_state
+
+            # call the "after state" callbacks
+            if callbacks[:after].key? current_state.name
+              callbacks[:after][current_state.name].each do |callback|
+                self.instance_eval &callback
+              end
+            end
+
+            # call the "after all" callbacks
+            if callbacks[:after].key? :all
+              callbacks[:after][:all].each do |callback|
+                self.instance_eval &callback
+              end
+            end
+
+            # Call the "after event" callbacks
+            event.callbacks[:after].each do |callback|
               self.instance_eval &callback
             end
+            self
           end
-
-          # Set the current state
-          @current_state = new_state
-
-          # call the "after state" callbacks
-          if callbacks[:after].key? current_state.name
-            callbacks[:after][current_state.name].each do |callback|
-              self.instance_eval &callback
-            end
-          end
-
-          # call the "after all" callbacks
-          if callbacks[:after].key? :all
-            callbacks[:after][:all].each do |callback|
-              self.instance_eval &callback
-            end
-          end
-
-          # Call the "after event" callbacks
-          event.callbacks[:after].each do |callback|
-            self.instance_eval &callback
-          end
-          self
-        else
-          raise Error.new 'Invalid Transition'
         end
       end
     end
