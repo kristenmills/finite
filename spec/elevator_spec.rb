@@ -15,8 +15,8 @@ describe Elevator do
     end
 
     it 'has methods to tell whether it is in a state or not' do
-      expect(elevator.idle?).to be_true
-      expect(elevator.moving?).to be_false
+      expect(elevator.idle?).to be true
+      expect(elevator.moving?).to be false
     end
 
     it 'can access all states' do
@@ -36,20 +36,20 @@ describe Elevator do
     end
 
     it 'has methods to tell whether an event can be performed' do
-      expect(elevator.can_prepare?).to be_true
-      expect(elevator.can_go_up?).to be_false
+      expect(elevator.can_prepare?).to be true
+      expect(elevator.can_go_up?).to be false
     end
 
     it 'can perform events' do
       elevator.prepare
       expect(elevator.current_state).to eq(:doors_closing)
-      expect(elevator.doors_closing?).to be_true
-      expect(elevator.idle?).to be_false
+      expect(elevator.doors_closing?).to be true
+      expect(elevator.idle?).to be false
       expect(elevator.possible_events).to eq([:go_up,:go_down])
       elevator.start
       expect(elevator.current_state).to eq(:doors_closing)
       elevator.go_down
-      expect(elevator.can_start?).to be_true
+      expect(elevator.can_start?).to be true
       elevator.start
       elevator.approach
       elevator.stop
